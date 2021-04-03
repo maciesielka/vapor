@@ -33,15 +33,10 @@ extension Application {
             guard let factory = self.storage.factory else {
                 fatalError("No responder configured. Configure with app.responder.use(...)")
             }
-            return factory(self.application)
+            return factory(self.application).addingMetrics()
         }
 
-        public var `default`: Vapor.Responder {
-            DefaultResponder(
-                routes: self.application.routes,
-                middleware: self.application.middleware.resolve()
-            )
-        }
+        public var `default`: Vapor.Responder { trieRouter }
 
         public func use(_ provider: Provider) {
             provider.run(self.application)
